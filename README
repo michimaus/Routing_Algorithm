@@ -1,0 +1,46 @@
+DUICAN MIHNEA-IONUT
+324 CA
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~README - TEMA 1 PC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Implemented in C
+
+Used data structure:
+    In order to hold in place all my data regarding the routing table I used a trie. The
+    implementation can be found in my_trie.h. Morover, implemented in my_parser.h all the needed
+    functions to read the content of the routing table, from the file, in most efficient way possible.
+    The ARP table is also structured like a trie, just to facilitate faster searching. The "alphabet"
+    used in trie is binary codification. (0/1).
+
+Implemented protocols:
+
+1 ARP - protocol
+    The router can handle 3 situations:
+
+    1. Get an ARP request, in which case the router behaves like default gateway. He responds with
+    his mac (ARP reply), in order to collect the pack and to send it outside the local network.
+
+    2. Getting the pack with an IP destination that does not belong to the local network, and the
+    mac cannot be found in his ARP table. The pack is placed in the queue of the router.
+    In this case he must sent an ARP request outside the network, by the interface that is
+    corresponding with the best route.
+
+    3. Recieving an ARP reply. At this time the router has to update the ARP table and has to
+    send away those packs that are kept in the queue. (now they know their way ...).
+
+
+2 IP - protocol
+    The router is able to identify those specific packs. First of all it is verified the cecksum. In
+    case of failure the packet is ignored totally. Other errors get treated by ICMP. The IP
+    destination is verified with the routing table. In case of a possitive response, then the pack 
+    gets forwarded, accourding to the info in the ARP table. Otherwise is sent an ARP request.
+
+
+3 ICMP - protocol
+    Responsible with checking back on the sender. It carryes information in form of a ECHO REPLY, 
+    time to leave error or destination unreachable.
+
+
+DISCLAIMER!! When computing the best route, there are checked ALL the masks found when parsing the
+routing table. There can be a max num. of 32 masks, so the total ammount of searching time would be
+(worst case) O(32 * 32), which in theory is still constant ... To sum up is not O(n)!!! 
